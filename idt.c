@@ -9,6 +9,21 @@
 #define FB_DARK_GREY 8
 #define FB_LIGHT_BLUE 9
 
+static unsigned char keyboard_scan_code_to_ascii[256] =
+{
+	0x0, 0x0, '1', '2', '3', '4', '5', '6',		// 0 - 7
+	'7', '8', '9', '0', '-', '=', 0x0, 0x0,		// 8 - 15
+	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i',		// 16 - 23
+	'o', 'p', '[', ']', '\n', 0x0, 'a', 's',	// 24 - 31
+	'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',		// 32 - 39
+	'\'', '`', 0x0, '\\', 'z', 'x', 'c', 'v',	// 40 - 47
+	'b', 'n', 'm', ',', '.', '/', 0x0, '*',		// 48 - 55
+	0x0, ' ', 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,		// 56 - 63
+	0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, '7',		// 64 - 71
+	'8', '9', '-', '4', '5', '6', '+', '1',		// 72 - 79
+	'2', '3', '0', '.'				// 80 - 83
+};
+
 struct IDTDescriptor idt_descriptors[INTERRUPTS_KEYBOARD];
 struct IDT idt;
 
@@ -29,6 +44,8 @@ void interrupts_install_idt()
     idt.address = (int) &idt_descriptors;
     idt.size = sizeof(struct IDTDescriptor) * INTERRUPTS_DESCRIPTOR_COUNT;
     interrupts_load_idt((int) &idt);
+
+    pic_remap(0x20, 0x28);
 }
 
 void interrupt_handler(__attribute__((unused)) struct cpu_state cpu, __attribute__((unused)) struct stack_state stack, unsigned int interrupt)

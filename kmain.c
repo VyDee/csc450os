@@ -1,4 +1,5 @@
 #include "io.h"
+#include "idt.h"
 
 /**
  * For the framebuffer,
@@ -81,7 +82,7 @@ void fb_write_string(int offset, char* s, int length)
 void fb_write_char(int offset, unsigned char s, unsigned char fg, unsigned char bg)
 {
     fb[offset] = s;
-    fb[offset+ 1] = ((fg & 0x0F) << 4 | (bg & 0x0F));
+    fb[offset+1] = ((fg & 0x0F) << 4 | (bg & 0x0F));
 }
 
 void fb_clear()
@@ -158,6 +159,7 @@ int main()
     //int cursorPos = 0x0050 * 10;
     
     //fb_move_cursor(0x0800);
+    interrupts_install_idt();
     memoryInitialize();
     //char* s = dataSpaceStart;
     char* s = getMem(10); //malloc 5 * sizeof(char) -> give me 5 bytes
