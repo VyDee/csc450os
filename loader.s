@@ -12,7 +12,7 @@ global loader                   ; the entry symbol for ELF
 
     extern main
     
-    section .text:                  ; start of the text (code) section
+    section .text                  ; start of the text (code) section
     align 4                         ; the code must be 4 byte aligned
         dd MAGIC_NUMBER             ; write the magic number to the machine code,
         dd FLAGS                    ; the flags,

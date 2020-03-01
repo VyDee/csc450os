@@ -78,6 +78,12 @@ void fb_write_string(int offset, char* s, int length)
     }
 }
 
+void fb_write_char(int offset, unsigned char s, unsigned char fg, unsigned char bg)
+{
+    fb[offset] = s;
+    fb[offset+ 1] = ((fg & 0x0F) << 4 | (bg & 0x0F));
+}
+
 void fb_clear()
 {
     for(int i = 0; i < 80*25; i++)
@@ -86,20 +92,24 @@ void fb_clear()
     }
 }
 
-
-
 /*char pointer*/
 
 char* originalByte = (char*) 0x00300000;
 char* endByte = (char*) 0x1F00000;
 char* memoryStartPointer;
+// void unmarkAllMemory()
+// {
+//     while (originalByte < endByte)
+//     {
+
+//     }
+// }
 void memoryInitialize()
 {
     memoryStartPointer = originalByte + ((endByte - originalByte) / 9);
 }
 
 void setBitToOne (int bitPos,int count)
-
 {
     char* target =  originalByte + (bitPos/8);
     *target |= (1 << (7 - (bitPos % 8)));
@@ -111,7 +121,6 @@ void setBitToOne (int bitPos,int count)
 }
 
 char* getMem(int numByte)
-
 {
     int count = 0;
     int bitCount = 0;
@@ -159,7 +168,7 @@ int main()
     s[4] = 'o';
     
     fb_clear();
-    fb_write_string(80*2*5, s,10);
+    fb_write_string(80*2*0, s,10);
    
 
     return 0;
