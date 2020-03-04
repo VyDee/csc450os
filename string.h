@@ -1,0 +1,1 @@
+void strcpy (char* start,char* des, int num);

@@ -1,0 +1,51 @@
+/*char pointer*/
+char* originalByte = (char*) 0x00300000;
+char* endByte = (char*) 0x1F00000;
+char* memoryStartPointer;
+
+void memoryInitialize()
+{
+    memoryStartPointer = originalByte + ((endByte - originalByte) / 9);
+}
+
+void setBitToOne (int bitPos,int count)
+{
+    char* target =  originalByte + (bitPos/8);
+    *target |= (1 << (7 - (bitPos % 8)));
+    // possible recursion stack overflow?? might have to rewrite as iterative in order for large allocations to work
+    if (count > 1)
+    {
+        setBitToOne (bitPos + 1 , count - 1);
+    }
+}
+
+char* getMem(int numByte)
+{
+    int count = 0;
+    int bitCount = 0;
+    char* curByte = originalByte;
+    while (curByte < memoryStartPointer)
+    {
+
+        for (int i = 7; i >= 0; i--)
+
+        {
+            bitCount++;
+            if ((*curByte >> i) & 1)
+            {
+                count = 0;
+            }
+            else
+            {
+                count++;
+                if(count == numByte)
+                {
+                    setBitToOne(bitCount - count, count);
+                    return memoryStartPointer + (bitCount - count);
+                }
+            }
+        }
+        curByte++;
+    }
+    return (char*)0xCAFEBABE;
+}
